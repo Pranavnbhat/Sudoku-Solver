@@ -23,3 +23,34 @@ def input_sudoku(Sudoku,x,y):
     
 input_sudoku(Sudoku, Rows, Columns) 
 print(Sudoku)
+
+
+def visitcells():
+    pass
+    # box =0
+    # count =0
+        
+        
+        
+        
+    # while count<y:
+        # count+=1
+        
+        
+        
+        # for i, value in enumerate(Sudoku[box]):
+            # if value==0:
+                # solve_lines(i,Sudoku[box])
+                
+                # if solved_output:
+                    # Sudoku[box][i]=solved_output
+                # else:	pass
+                
+        # if count==y-1:
+            # count=0
+            # box+=1
+	
+    
+def solve_lines(x,list[box]):
+    pass
+     
