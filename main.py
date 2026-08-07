@@ -36,6 +36,12 @@ def visitcells(Columns):
     box =0          #box here is actually row 
     count =0
     
+    row_possible=[]
+    column_possible=[]
+    box_possible=[]
+    
+    common=[]
+    
     while count<Columns:
         count+=1
         
@@ -43,13 +49,15 @@ def visitcells(Columns):
         
         for i, value in enumerate(Sudoku[box]):
             if value==0:
-                solve_box(Box_size,box,i,Sudoku)
-                solve_columns(i,Sudoku,box,Rows)
-                solve_rows(i,Sudoku[box])
+                box_possible=solve_box(Box_size,box,i,Sudoku)
+                column_possible=solve_columns(i,Sudoku,box,Rows)
+                row_possible=solve_rows(i,Sudoku[box])
                 
-                # if solved_output:                     #solved_outpput can be ignored now this whole if statement can be ignored for now btw this is prolly not needed 
-                    # Sudoku[box][i]=solved_output
-                # else:	pass
+                common=list(set(row_possible) & set(column_possible) & set(box_possible))
+                
+                if len(common)==1:                     
+                    Sudoku[box][i]=common[0]
+                else:	pass
                 
         if count==Columns-1:
             count=0
@@ -68,7 +76,10 @@ def solve_rows(index,row):
     if len(possible_values)==1:
         row[index]=possible_values[0]
         
+    return possible_values    
         
+
+
 def solve_columns(index,Sudoku,row,total_rows):
     
     possible_values=[]
@@ -86,7 +97,11 @@ def solve_columns(index,Sudoku,row,total_rows):
    
     if len(possible_values)==1:
         Sudoku[row][index]=possible_values[0]
-
+    
+    return possible_values 
+    
+    
+    
 def solve_box(Box_size,row,index,Sudoku):
     temp_row=row
     temp_index=index
@@ -95,11 +110,11 @@ def solve_box(Box_size,row,index,Sudoku):
     
     while (temp_index%Box_size)!=0:
         temp_index-=1
-    temp_index+=1                    # it is off by one number 
+    
     
     while (temp_row%Box_size)!=0:
         temp_row-=1
-    temp_row+=1                    # it is off by one number    
+    
     
     for i in range (0,Box_size):
         temp_list.extend(Sudoku[temp_row][temp_index : temp_index + Box_size])
@@ -111,6 +126,8 @@ def solve_box(Box_size,row,index,Sudoku):
 
     if len(possible_values)==1:
         Sudoku[row][index]=possible_values[0]
+    
+    return possible_values     
 
 
 
