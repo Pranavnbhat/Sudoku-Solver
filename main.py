@@ -31,7 +31,7 @@ print(Sudoku)
 def visitcells(Columns):
     pass           #temp pass so program can still run 
     
-    box =0       #box here is actually row 
+    box =0          #box here is actually row 
     count =0
     
     while count<Columns:
@@ -41,7 +41,9 @@ def visitcells(Columns):
         
         for i, value in enumerate(Sudoku[box]):
             if value==0:
-                solve_lines(i,Sudoku[box])
+                solve_box()
+                solve_columns(i,Sudoku,box,Rows)
+                solve_rows(i,Sudoku[box])
                 
                 if solved_output:
                     Sudoku[box][i]=solved_output
@@ -52,7 +54,7 @@ def visitcells(Columns):
             box+=1
 	
     
-def solve_lines(index,row):
+def solve_rows(index,row):
     pass            #temp pass so program can still run 
     
     possible_values=[]
@@ -63,5 +65,24 @@ def solve_lines(index,row):
         
     if len(possible_values)==1:
         row[index]=possible_values[0]
+        
+        
+def solve_columns(index,Sudoku,row,total_rows):
+    
+    possible_values=[]
+    count=0
+    temp_list=[]
+    
+    while count<total_rows:
+        temp_list.append(Sudoku[count][index])
+        count+=1
+    
+    for i in range (1,10):
+        if i not in temp_list:
+            possible_values.append(i)    
+   
+   
+    if len(possible_values)==1:
+        Sudoku[row][index]=possible_values[0]
     
     
