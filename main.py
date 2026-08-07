@@ -31,53 +31,33 @@ print(Sudoku)
 
 
 def visitcells(Columns):
-    pass           #temp pass so program can still run 
-    
-    box =0          #box here is actually row 
-    count =0
-    
-    row_possible=[]
-    column_possible=[]
-    box_possible=[]
-    
-    common=[]
-    
-    while count<Columns:
-        count+=1
+    while True:
+        changed_cell=False
+        box =0          #box here is actually row i called it box as one row looks like a box in the array too late to chnage now , might at the end for readablity 
+        count =0
         
-        
-        
-        for i, value in enumerate(Sudoku[box]):
-            if value==0:
-                box_possible=solve_box(Box_size,box,i,Sudoku)
-                column_possible=solve_columns(i,Sudoku,box,Rows)
-                row_possible=solve_rows(i,Sudoku[box])
+        while count<Columns:
+            count+=1
+            
+            for i, value in enumerate(Sudoku[box]):
+                if value==0:
+                    if solve_cell(i, box, Box_size, Rows, Sudoku):
+                        changed_cell = True                              # this is pretty scuffed just remember the changed_cell here and in the solve_cell function arent the same thats why the loop can restart 
+
+            if count==Columns-1:
+                count=0
+                if box!=Rows-1: box+=1
+                else: break
                 
-                common=list(set(row_possible) & set(column_possible) & set(box_possible))
-                
-                if len(common)==1:                     
-                    Sudoku[box][i]=common[0]
-                else:	pass
-                
-        if count==Columns-1:
-            count=0
-            box+=1
-	
+        if not changed_cell:    break
     
-def solve_rows(index,row):
-    pass            #temp pass so program can still run 
-    
+def solve_rows(index,row):    
     possible_values=[]
     
     for i in range (1,10):
         if i not in row:
             possible_values.append(i)
-        
-    if len(possible_values)==1:
-        row[index]=possible_values[0]
-        
-    return possible_values    
-        
+    return possible_values     
 
 
 def solve_columns(index,Sudoku,row,total_rows):
@@ -93,11 +73,6 @@ def solve_columns(index,Sudoku,row,total_rows):
     for i in range (1,10):
         if i not in temp_list:
             possible_values.append(i)    
-   
-   
-    if len(possible_values)==1:
-        Sudoku[row][index]=possible_values[0]
-    
     return possible_values 
     
     
@@ -123,11 +98,26 @@ def solve_box(Box_size,row,index,Sudoku):
     for i in range (1,10):
         if i not in temp_list:
             possible_values.append(i)     
+    return possible_values  
 
-    if len(possible_values)==1:
-        Sudoku[row][index]=possible_values[0]
+
+
+def solve_cell(i,box,Box_size,Rows,Sudoku):
     
-    return possible_values     
+    column_possible=solve_columns(i,Sudoku,box,Rows)
+    box_possible=solve_box(Box_size,box,i,Sudoku)
+    row_possible=solve_rows(i,Sudoku[box])
+    
+    changed_cell=False
+    
+    common=list(set(row_possible) & set(column_possible) & set(box_possible))
+    
+    if len(common)==1:                     
+        Sudoku[box][i]=common[0]
+        changed_cell=True
+      
+    
+    return changed_cell    
 
-
-
+visitcells(Columns)
+print(Sudoku)    
