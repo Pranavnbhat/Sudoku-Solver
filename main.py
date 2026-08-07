@@ -31,21 +31,25 @@ print(Sudoku)
 
 
 def visitcells(Columns):
-    box =0          #box here is actually row 
-    count =0
-    
-    
-    while count<Columns:
-        count+=1
+    while True:
+        changed_cell=False
+        box =0          #box here is actually row i called it box as one row looks like a box in the array too late to chnage now , might at the end for readablity 
+        count =0
         
-        for i, value in enumerate(Sudoku[box]):
-            if value==0:
-                solve_cell(i,box,Box_size,Rows,Sudoku)
+        while count<Columns:
+            count+=1
+            
+            for i, value in enumerate(Sudoku[box]):
+                if value==0:
+                    if solve_cell(i, box, Box_size, Rows, Sudoku):
+                        changed_cell = True                              # this is pretty scuffed just remember the changed_cell here and in the solve_cell function arent the same thats why the loop can restart 
 
-        if count==Columns-1:
-            count=0
-            box+=1
-	
+            if count==Columns-1:
+                count=0
+                if box!=Rows-1: box+=1
+                else: break
+                
+        if not changed_cell:    break
     
 def solve_rows(index,row):    
     possible_values=[]
@@ -104,8 +108,16 @@ def solve_cell(i,box,Box_size,Rows,Sudoku):
     box_possible=solve_box(Box_size,box,i,Sudoku)
     row_possible=solve_rows(i,Sudoku[box])
     
+    changed_cell=False
+    
     common=list(set(row_possible) & set(column_possible) & set(box_possible))
     
     if len(common)==1:                     
         Sudoku[box][i]=common[0]
+        changed_cell=True
+      
     
+    return changed_cell    
+
+visitcells(Columns)
+print(Sudoku)    
