@@ -3,6 +3,8 @@ Rows=0
 Columns=0
 Box_size=0
 
+import time 
+
 def input_sudoku(Sudoku,Rows,Columns):
     
     Rows= int(input('Enter Rows '))
@@ -99,6 +101,38 @@ def solve_box(Box_size,row,index,Sudoku):
         if i not in temp_list:
             possible_values.append(i)     
     return possible_values  
+    
+    
+# backtraking part 
+def find_empty_cell(Sudoku, Rows, Columns):
+    for row in range(Rows):
+        for col in range(Columns):
+            if Sudoku[row][col] == 0:
+                return row, col
+    return None
+
+
+def backtrack(Sudoku, Rows, Columns, Box_size):
+    empty_cell = find_empty_cell(Sudoku, Rows, Columns)
+    if empty_cell is None:
+        return True
+
+    row, col = empty_cell
+
+    row_possible = solve_rows(col, Sudoku[row])
+    column_possible = solve_columns(col, Sudoku, row, Rows)
+    box_possible = solve_box(Box_size, row, col, Sudoku)
+    candidates = list(set(row_possible) & set(column_possible) & set(box_possible))
+
+    for value in candidates:
+        Sudoku[row][col] = value
+
+        if backtrack(Sudoku, Rows, Columns, Box_size):
+            return True
+
+        Sudoku[row][col] = 0
+
+    return False  
 
 
 
@@ -119,5 +153,10 @@ def solve_cell(i,box,Box_size,Rows,Sudoku):
     
     return changed_cell    
 
+start = time.perf_counter()
 visitcells(Columns)
+backtrack(Sudoku, Rows, Columns, Box_size)
+end = time.perf_counter()
+
+print(f"Time taken: {end - start:.6f} seconds")
 print(Sudoku)    
